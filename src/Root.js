@@ -17,7 +17,7 @@ const makeid = () => {
 }
 
 const reducer = combineReducers({
-  ...createGeneralReducer('todos')
+  ...createGeneralReducer({ todos: { foo: { done: true, text: 'boi' } } })
 })
 
 const store = createStore(
@@ -27,12 +27,12 @@ const store = createStore(
 
 const Todo = ({ id }) => (
   <GeneralStateProvider scope={['todos', id]}>
-    {(todo, mutateTodo) => (
+    {(todo, setState, generateAction) => (
       <Fragment>
         <input
           value={todo.text}
           onChange={e =>
-            mutateTodo({
+            generateAction({
               path: ['text'],
               value: e.target.value
             })
@@ -45,15 +45,13 @@ const Todo = ({ id }) => (
             backgroundColor: todo.done ? 'green' : 'red'
           }}
           onClick={() =>
-            mutateTodo(draft => {
-              const newDoneValue = !draft.done
-              draft.done = newDoneValue
-              if (newDoneValue) {
-                draft.text = draft.text + ' (done)'
-              } else {
-                draft.text = draft.text.replace(' (done)', '')
-              }
-            }, 'toggle todo and update text')
+            generateAction(
+              ({ done }) => ({
+                path: ['done'],
+                value: !done
+              }),
+              'toggle todo and update text'
+            )
           }
         />
         <div
@@ -62,11 +60,7 @@ const Todo = ({ id }) => (
             width: 32,
             backgroundColor: 'blue'
           }}
-          onClick={() =>
-            mutateTodo(draft => {
-              draft.deeply.nested.boi = true
-            })
-          }
+          onClick={() => {}}
         />
         <br />
       </Fragment>
@@ -76,11 +70,11 @@ const Todo = ({ id }) => (
 
 const Todos = () => (
   <GeneralStateProvider scope={['todos']}>
-    {(todos, mutateTodos) => (
+    {(todos, setState, constructAction) => (
       <div>
         <button
           onClick={() =>
-            mutateTodos(
+            constructAction(
               {
                 path: [makeid()],
                 value: {
@@ -96,7 +90,7 @@ const Todos = () => (
         <br />
         <button
           onClick={() =>
-            mutateTodos(
+            constructAction(
               Object.keys(todos).map(id => ({
                 path: [id, 'done'],
                 value: true

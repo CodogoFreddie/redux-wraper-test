@@ -34,8 +34,7 @@
     "build:umd": "react-scv build:umd",
     "start": "react-scv start",
     "test": "react-scv test",
-    "test:debug":
-    "node --inspect-brk ./node_modules/react-scv/bin/react-scv test --runInBand"
+    "test:debug": "node --inspect-brk ./node_modules/react-scv/bin/react-scv test --runInBand"
   },
   "keywords": [],
   "devDependencies": {
@@ -44,6 +43,7 @@
     "redux": "^4.0.0"
   },
   "dependencies": {
+    "prop-types": "^15.6.1",
     "ramda": "^0.25.0"
   }
 }

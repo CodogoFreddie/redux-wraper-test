@@ -2,50 +2,21 @@ import React from 'react'
 import { connect } from 'react-redux'
 import * as R from 'ramda'
 
-const recursiveProxyGenerator = (mutations, state = {}, path = []) =>
-  new Proxy(state, {
-    get: (target, prop) => {
-      if (
-        typeof target[prop] === 'object' ||
-        typeof target[prop] === 'undefined'
-      ) {
-        return recursiveProxyGenerator(mutations, target[prop], [...path, prop])
-      } else {
-        return target[prop]
-      }
-    },
-    set: (target, prop, value) => {
-      mutations.push({
-        path: [...path, prop],
-        value
-      })
-      return true
-    }
-  })
+import consts from './consts'
 
-const createActionProducingProxy = state => {
-  const mutations = []
-
-  const proxy = recursiveProxyGenerator(mutations, state)
-
-  return { proxy, mutations }
-}
-
-const generateSingleAction = ({ scope, path, value }) => {
-  const [name, ...actionPath] = [...scope, ...path]
+const generateSingleAction = ({ scope, path = [], value }) => {
+  const actionPath = [...scope, ...path]
 
   return {
-    type: `${name.toUpperCase()}_SET_PROP`,
+    type: consts.setStateAction,
     path: actionPath,
     value
   }
 }
 
 const generateMultiAction = ({ scope, mutations }) => {
-  const [name] = scope
-
   return {
-    type: `${name.toUpperCase()}_SET_PROP_BULK`,
+    type: consts.setStateBulkAction,
     mutations: mutations.map(({ path, value }) => {
       const actionPath = [...scope, ...path].slice(1)
       return {
@@ -56,56 +27,40 @@ const generateMultiAction = ({ scope, mutations }) => {
   }
 }
 
-@connect(x => x)
+const addLabelToType = (label = '') =>
+  R.evolve({
+    type: x => `(${label}) ${x}`
+  })
+
+@connect(R.prop(consts.rootReducer))
 class StateProvider extends React.Component {
   render() {
     const { scope, children, dispatch, ...state } = this.props
     const scopedState = R.path(scope, state)
 
-    const mutator = (input, label) => {
-      let action
+    const setState = (input, label = '') => {
+      const newState = typeof input === 'function' ? input(scopedState) : input
 
-      if (typeof input === 'function') {
-        const { proxy, mutations } = createActionProducingProxy(scopedState)
+      const action = generateSingleAction({
+        scope,
+        path: [],
+        value: newState
+      })
 
-        input(proxy)
-
-        if (mutations.length === 0) {
-          return
-        } else if (mutations.length === 1) {
-          action = generateSingleAction({
-            scope,
-            ...mutations[0]
-          })
-        } else {
-          action = generateMultiAction({
-            scope,
-            mutations
-          })
-        }
-      } else if (Array.isArray(input)) {
-        action = generateMultiAction({
-          scope,
-          mutations: input
-        })
-      } else {
-        const { path, value } = input
-
-        action = generateSingleAction({
-          scope,
-          path,
-          value
-        })
-      }
-
-      if (label) {
-        action.type = `(${label}) ${action.type}`
-      }
-
-      dispatch(action)
+      dispatch(addLabelToType(label)(action))
     }
 
-    return children(scopedState, mutator)
+    const constructAction = (input, label = '') => {
+      const mutations = typeof input === 'function' ? input(scopedState) : input
+
+      const action = Array.isArray(mutations)
+        ? generateMultiAction({ scope, mutations: mutations })
+        : generateSingleAction({ scope, ...mutations })
+
+      dispatch(addLabelToType(label)(action))
+    }
+
+    return children(scopedState, setState, constructAction)
   }
 }
 
