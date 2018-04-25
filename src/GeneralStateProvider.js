@@ -29,7 +29,7 @@ const generateMultiAction = ({ scope, mutations }) => {
 
 const addLabelToType = (label = '') =>
   R.evolve({
-    type: x => `(${label}) ${x}`
+    type: x => (label.length ? `${x}::${label}` : x)
   })
 
 @connect(R.prop(consts.rootReducer))

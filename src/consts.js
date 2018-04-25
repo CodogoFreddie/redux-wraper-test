@@ -1,5 +1,5 @@
 export default {
-  setStateAction: 'SET_STATE',
-  setStateBulkAction: 'SET_STATE_BULK',
-  rootReducer: '__general'
+  setStateAction: 'DALEK_SET_STATE',
+  setStateBulkAction: 'DALEK_SET_STATE_BULK',
+  rootReducer: '__dalek'
 }

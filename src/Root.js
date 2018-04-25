@@ -50,7 +50,7 @@ const Todo = ({ id }) => (
                 path: ['done'],
                 value: !done
               }),
-              'toggle todo and update text'
+              'TOGGLE_DONE'
             )
           }
         />
