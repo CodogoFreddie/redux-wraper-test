@@ -1,18 +1,18 @@
 import * as R from 'ramda'
 
 const getCleanType = ({ type }) =>
-  type.includes(' ') ? type.split(' ')[0] : type
+  type.includes(' ') ? type.split(' ').slice(-1)[0] : type
 
 const noop = x => x
 
-const createGenericReducer = name => {
+const createGeneralReducer = name => {
   const upperCaseName = name.toUpperCase()
 
   const updaters = {
     [`${upperCaseName}_SET_PROP`]: (state, { path, value }) =>
       R.assocPath(path, value, state),
 
-    [`BULK_${upperCaseName}_SET_PROP`]: (state, { mutations }) =>
+    [`${upperCaseName}_SET_PROP_BULK`]: (state, { mutations }) =>
       R.reduce(
         (state, { path, value }) => R.assocPath(path, value, state),
         state,
@@ -20,11 +20,13 @@ const createGenericReducer = name => {
       )
   }
 
-  return (state = {}, action) => {
-    const updater = updaters[getCleanType(action)] || noop
+  return {
+    [name]: (state = {}, action) => {
+      const updater = updaters[getCleanType(action)] || noop
 
-    return updater(state, action)
+      return updater(state, action)
+    }
   }
 }
 
-export default createGenericReducer
+export default createGeneralReducer

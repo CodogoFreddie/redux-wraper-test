@@ -2,8 +2,8 @@ import React, { Component, Fragment } from 'react'
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 
-import createGenericReducer from './createGenericReducer'
-import StateProvider from './StateProvider'
+import createGeneralReducer from './createGeneralReducer'
+import GeneralStateProvider from './GeneralStateProvider'
 
 const makeid = () => {
   var text = ''
@@ -17,7 +17,7 @@ const makeid = () => {
 }
 
 const reducer = combineReducers({
-  todos: createGenericReducer('todos')
+  ...createGeneralReducer('todos')
 })
 
 const store = createStore(
@@ -26,7 +26,7 @@ const store = createStore(
 )
 
 const Todo = ({ id }) => (
-  <StateProvider scope={['todos', id]}>
+  <GeneralStateProvider scope={['todos', id]}>
     {(todo, mutateTodo) => (
       <Fragment>
         <input
@@ -71,11 +71,11 @@ const Todo = ({ id }) => (
         <br />
       </Fragment>
     )}
-  </StateProvider>
+  </GeneralStateProvider>
 )
 
 const Todos = () => (
-  <StateProvider scope={['todos']}>
+  <GeneralStateProvider scope={['todos']}>
     {(todos, mutateTodos) => (
       <div>
         <button
@@ -110,7 +110,7 @@ const Todos = () => (
         {Object.keys(todos).map(id => <Todo key={id} id={id} />)}
       </div>
     )}
-  </StateProvider>
+  </GeneralStateProvider>
 )
 
 class App extends Component {

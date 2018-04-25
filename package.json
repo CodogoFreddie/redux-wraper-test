@@ -15,21 +15,35 @@
       "port": "4000"
     }
   },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "prettier": {
+    "semi": false,
+    "useTabs": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "none",
+    "jsxBracketSameLine": true,
+    "bracketSpacing": true,
+    "arrowParens": "avoid"
+  },
   "scripts": {
     "build": "react-scv build:app && react-scv build:umd",
     "build:app": "react-scv build:app",
     "build:umd": "react-scv build:umd",
     "start": "react-scv start",
     "test": "react-scv test",
-    "test:debug": "node --inspect-brk ./node_modules/react-scv/bin/react-scv test --runInBand"
+    "test:debug":
+    "node --inspect-brk ./node_modules/react-scv/bin/react-scv test --runInBand"
   },
   "keywords": [],
   "devDependencies": {
-    "react-scv": "0.0.15"
+    "react-redux": "^5.0.7",
+    "react-scv": "0.0.15",
+    "redux": "^4.0.0"
   },
   "dependencies": {
-    "ramda": "^0.25.0",
-    "react-redux": "^5.0.7",
-    "redux": "^4.0.0"
+    "ramda": "^0.25.0"
   }
 }
