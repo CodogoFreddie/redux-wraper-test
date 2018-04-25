@@ -2,8 +2,29 @@
   "name": "redux-wraper-test",
   "version": "0.1.0",
   "private": true,
-  "eslint": {
-    "extends": "react-app"
+  "eslintConfig": {
+    "extends": "react-app",
+    "rules": {
+      "no-unused-vars": [
+        "warn",
+        {
+          "vars": "all",
+          "args": "after-used",
+          "ignoreRestSiblings": false,
+          "varsIgnorePattern": "_+"
+        }
+      ]
+    }
+  },
+  "prettier": {
+    "semi": false,
+    "useTabs": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "none",
+    "jsxBracketSameLine": true,
+    "bracketSpacing": true,
+    "arrowParens": "avoid"
   },
   "dependencies": {
     "eslint": "^4.19.1",
@@ -18,9 +39,10 @@
     "redux": "^4.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "format": "prettier --write src/**/*.js && eslint --fix src/**/*.js",
+    "start": "react-scripts start",
+    "test": "react-scripts test --env=jsdom"
   }
 }
