@@ -1,1 +1,3 @@
-describe('foo', () => {it('fails', () => {})})
+describe('foo', () => {
+  it('fails', () => {})
+})
