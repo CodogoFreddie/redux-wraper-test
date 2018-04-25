@@ -1,48 +1,35 @@
 {
   "name": "redux-wraper-test",
-  "version": "0.1.0",
   "private": true,
-  "eslintConfig": {
-    "extends": "react-app",
-    "rules": {
-      "no-unused-vars": [
-        "warn",
-        {
-          "vars": "all",
-          "args": "after-used",
-          "ignoreRestSiblings": false,
-          "varsIgnorePattern": "_+"
-        }
-      ]
+  "version": "0.0.0",
+  "description": "A nifty React component",
+  "main": "./build/umd/umd.js",
+  "react-scv": {
+    "appBuildEntry": "src/app.js",
+    "umdBuildEntry": "src/module/index.js",
+    "html": {
+      "title": "redux-generic-state",
+      "description": "A nifty React component"
+    },
+    "devServer": {
+      "port": "4000"
     }
   },
-  "prettier": {
-    "semi": false,
-    "useTabs": false,
-    "tabWidth": 2,
-    "singleQuote": true,
-    "trailingComma": "none",
-    "jsxBracketSameLine": true,
-    "bracketSpacing": true,
-    "arrowParens": "avoid"
+  "scripts": {
+    "build": "react-scv build:app && react-scv build:umd",
+    "build:app": "react-scv build:app",
+    "build:umd": "react-scv build:umd",
+    "start": "react-scv start",
+    "test": "react-scv test",
+    "test:debug": "node --inspect-brk ./node_modules/react-scv/bin/react-scv test --runInBand"
+  },
+  "keywords": [],
+  "devDependencies": {
+    "react-scv": "0.0.15"
   },
   "dependencies": {
-    "eslint": "^4.19.1",
-    "lodash.get": "^4.4.2",
-    "lodash.set": "^4.3.2",
-    "prettier": "^1.12.1",
     "ramda": "^0.25.0",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
     "react-redux": "^5.0.7",
-    "react-scripts": "1.1.4",
     "redux": "^4.0.0"
-  },
-  "scripts": {
-    "build": "react-scripts build",
-    "eject": "react-scripts eject",
-    "format": "prettier --write src/**/*.js && eslint --fix src/**/*.js",
-    "start": "react-scripts start",
-    "test": "react-scripts test --env=jsdom"
   }
 }

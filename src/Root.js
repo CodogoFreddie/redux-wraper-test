@@ -53,7 +53,7 @@ const Todo = ({ id }) => (
               } else {
                 draft.text = draft.text.replace(' (done)', '')
               }
-            })
+            }, 'toggle todo and update text')
           }
         />
         <div

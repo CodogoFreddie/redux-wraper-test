@@ -1,36 +1,29 @@
 import * as R from 'ramda'
 
+const getCleanType = ({ type }) =>
+  type.includes(' ') ? type.split(' ')[0] : type
+
+const noop = x => x
+
 const createGenericReducer = name => {
-  const labelMatchString = '(\\([a-z ]+\\) )?'
   const upperCaseName = name.toUpperCase()
 
-  const setMatcher = new RegExp(
-    `^${labelMatchString}${upperCaseName}_SET_PROP$`
-  )
-  const bulkSetMatcher = new RegExp(
-    `^${labelMatchString}BULK_${upperCaseName}_SET_PROP$`
-  )
+  const updaters = {
+    [`${upperCaseName}_SET_PROP`]: (state, { path, value }) =>
+      R.assocPath(path, value, state),
 
-  return (state = {}, action) => {
-    if (!action.type.includes(upperCaseName)) {
-      return state
-    }
-
-    if (setMatcher.test(action.type)) {
-      const { path, value } = action
-      return R.assocPath(path, value, state)
-    }
-
-    if (bulkSetMatcher.test(action.type)) {
-      const { mutations } = action
-      return R.reduce(
+    [`BULK_${upperCaseName}_SET_PROP`]: (state, { mutations }) =>
+      R.reduce(
         (state, { path, value }) => R.assocPath(path, value, state),
         state,
         mutations
       )
-    }
+  }
 
-    return state
+  return (state = {}, action) => {
+    const updater = updaters[getCleanType(action)] || noop
+
+    return updater(state, action)
   }
 }
 

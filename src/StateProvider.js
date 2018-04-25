@@ -99,7 +99,7 @@ const StateProvider = connect(x => x)(
         }
 
         if (label) {
-          action.type = `(${label}) ${action.type}`
+          action.type = `${action.type} (${label})`
         }
 
         dispatch(action)
